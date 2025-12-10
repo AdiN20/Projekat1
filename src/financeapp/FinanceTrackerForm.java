@@ -18,6 +18,7 @@ public class FinanceTrackerForm {
     private JPanel mainPanel;
     private JButton deleteButton;
 
+
     private TransactionManager manager;
 
 
@@ -26,6 +27,13 @@ public class FinanceTrackerForm {
     public FinanceTrackerForm() {
         manager = new TransactionManager();
 
+        typeCombo.addItem("Plata");
+        typeCombo.addItem("Hrana");
+        typeCombo.addItem("Racuni");
+        typeCombo.addItem("Zabava");
+        typeCombo.addItem("Prijevoz");
+        typeCombo.addItem("Ostalo");
+
         loadDataIntoTable();
         updateSummary();
 
@@ -33,6 +41,7 @@ public class FinanceTrackerForm {
         addButton.addActionListener(e -> {
             try {
                 String type = (String) typeCombo.getSelectedItem();
+                String category = (String) typeCombo.getSelectedItem();
                 double amount = Double.parseDouble(amountField.getText());
                 String description = descriptionField.getText();
                 if (description.isEmpty()) {
@@ -66,6 +75,7 @@ public class FinanceTrackerForm {
                 typeCombo.setSelectedItem(transactionTable.getValueAt(selectedRow, 0).toString());
                 amountField.setText(transactionTable.getValueAt(selectedRow, 1).toString());
                 descriptionField.setText(transactionTable.getValueAt(selectedRow, 2).toString());
+                typeCombo.setSelectedItem(transactionTable.getValueAt(selectedRow, 3).toString());
             }
         });
 
@@ -140,12 +150,15 @@ public class FinanceTrackerForm {
         model.addColumn("Type");
         model.addColumn("Amount");
         model.addColumn("Description");
+        model.addColumn("Category");
 
         for (Transaction t : list) {
             model.addRow(new Object[]{
                     t.getType(),
                     t.getAmount(),
-                    t.getDescription()
+                    t.getDescription(),
+                    t.getCategory()
+
             });
         }
         transactionTable.setModel(model);

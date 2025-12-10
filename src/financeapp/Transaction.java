@@ -9,26 +9,29 @@ public class Transaction {
     private String type;
     private double amount;
     private String description;
+    private String category;
 
     public Transaction(ObjectId id, String type, double amount, String description) {
         this.id = id;
         this.type = type;
         this.amount = amount;
         this.description = description;
+        this.category = category;
     }
 
     public Transaction(String type, double amount, String description) {
         this.type = type;
         this.amount = amount;
         this.description = description;
+        this.category = category;
+
     }
 
-    // Getter za ObjectId
+
     public ObjectId getId() {
         return id;
     }
 
-    // Getter koji vraća ID kao String
     public String getIdString() {
         return id != null ? id.toHexString() : null;
     }
@@ -36,7 +39,9 @@ public class Transaction {
     public Document toDocument() {
         Document doc = new Document("type", type)
                 .append("amount", amount)
-                .append("description", description);
+                .append("description", description)
+                .append("category", category);
+
 
         if (id != null) {
             doc.append("_id", id);
@@ -56,4 +61,9 @@ public class Transaction {
     public String getDescription() {
         return description;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
 }
