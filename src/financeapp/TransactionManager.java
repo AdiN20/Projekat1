@@ -4,11 +4,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 
 public class TransactionManager {
-
 
     private final MongoCollection<Document> collection;
 
@@ -21,22 +21,19 @@ public class TransactionManager {
         collection.insertOne(t.toDocument());
     }
 
-
     public ArrayList<Transaction> getAllTransactions() {
         ArrayList<Transaction> list = new ArrayList<>();
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()) {
             Document d = cursor.next();
             list.add(new Transaction(
-
+                    d.getObjectId("_id"),
                     d.getString("type"),
                     d.getDouble("amount"),
                     d.getString("description")
             ));
         }
-
         return list;
-
     }
 
     public double getTotalIncome() {
@@ -60,6 +57,27 @@ public class TransactionManager {
     }
 
 
+    public void updateTransaction(Transaction t) {
+        Document updated = new Document("type", t.getType())
+                .append("amount", t.getAmount())
+                .append("description", t.getDescription());
+
+        collection.updateOne(
+                new Document("_id", t.getId()),
+                new Document("$set", updated)
+        );
+    }
 
 
+    public void updateTransaction(String selectedTransactionId, String type, double amount, String description) {
+        ObjectId objectId = new ObjectId(selectedTransactionId);
+        Document updated = new Document("type", type)
+                .append("amount", amount)
+                .append("description", description);
+
+        collection.updateOne(
+                new Document("_id", objectId),
+                new Document("$set", updated)
+        );
+    }
 }
