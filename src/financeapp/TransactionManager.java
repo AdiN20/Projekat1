@@ -17,9 +17,11 @@ public class TransactionManager {
         collection = db.getCollection("transactions");
     }
 
+
     public void addTransaction(Transaction t) {
         collection.insertOne(t.toDocument());
     }
+
 
     public ArrayList<Transaction> getAllTransactions() {
         ArrayList<Transaction> list = new ArrayList<>();
@@ -30,11 +32,13 @@ public class TransactionManager {
                     d.getObjectId("_id"),
                     d.getString("type"),
                     d.getDouble("amount"),
-                    d.getString("description")
+                    d.getString("description"),
+                    d.getString("category")
             ));
         }
         return list;
     }
+
 
     public double getTotalIncome() {
         double total = 0;
@@ -45,6 +49,7 @@ public class TransactionManager {
         }
         return total;
     }
+
 
     public double getTotalExpense() {
         double total = 0;
@@ -60,7 +65,8 @@ public class TransactionManager {
     public void updateTransaction(Transaction t) {
         Document updated = new Document("type", t.getType())
                 .append("amount", t.getAmount())
-                .append("description", t.getDescription());
+                .append("description", t.getDescription())
+                .append("category", t.getCategory());
 
         collection.updateOne(
                 new Document("_id", t.getId()),
@@ -74,6 +80,20 @@ public class TransactionManager {
         Document updated = new Document("type", type)
                 .append("amount", amount)
                 .append("description", description);
+
+        collection.updateOne(
+                new Document("_id", objectId),
+                new Document("$set", updated)
+        );
+    }
+
+
+    public void updateTransaction(String selectedTransactionId, String type, double amount, String description, String category) {
+        ObjectId objectId = new ObjectId(selectedTransactionId);
+        Document updated = new Document("type", type)
+                .append("amount", amount)
+                .append("description", description)
+                .append("category", category);
 
         collection.updateOne(
                 new Document("_id", objectId),

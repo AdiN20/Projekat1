@@ -11,7 +11,8 @@ public class Transaction {
     private String description;
     private String category;
 
-    public Transaction(ObjectId id, String type, double amount, String description) {
+
+    public Transaction(ObjectId id, String type, double amount, String description, String category) {
         this.id = id;
         this.type = type;
         this.amount = amount;
@@ -19,14 +20,13 @@ public class Transaction {
         this.category = category;
     }
 
-    public Transaction(String type, double amount, String description) {
+
+    public Transaction(String type, double amount, String description, String category) {
         this.type = type;
         this.amount = amount;
         this.description = description;
         this.category = category;
-
     }
-
 
     public ObjectId getId() {
         return id;
@@ -41,7 +41,6 @@ public class Transaction {
                 .append("amount", amount)
                 .append("description", description)
                 .append("category", category);
-
 
         if (id != null) {
             doc.append("_id", id);
@@ -65,5 +64,4 @@ public class Transaction {
     public String getCategory() {
         return category;
     }
-
 }
