@@ -16,6 +16,7 @@ public class FinanceTrackerForm {
     private JLabel expenseLabel;
     private JLabel balanceLabel;
     private JPanel mainPanel;
+    private JButton deleteButton;
 
     private TransactionManager manager;
 
@@ -58,7 +59,8 @@ public class FinanceTrackerForm {
             int selectedRow = transactionTable.getSelectedRow();
             if (selectedRow >= 0) {
 
-                selectedTransactionId = String.valueOf(manager.getAllTransactions().get(selectedRow).getId());
+                selectedTransactionId = manager.getAllTransactions().get(selectedRow).getIdString();
+
 
 
                 typeCombo.setSelectedItem(transactionTable.getValueAt(selectedRow, 0).toString());
@@ -98,6 +100,36 @@ public class FinanceTrackerForm {
                 }
             } else {
                 JOptionPane.showMessageDialog(mainPanel, "Odaberite transakciju za ažuriranje");
+            }
+        });
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = transactionTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        mainPanel,
+                        "Jeste li sigurni da želite izbrisati ovu transakciju?",
+                        "Potvrda brisanja",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+
+                    String transactionId = manager.getAllTransactions().get(selectedRow).getIdString();
+
+                    manager.deleteTransaction(transactionId);
+
+
+                    loadDataIntoTable();
+                    updateSummary();
+
+
+                    amountField.setText("");
+                    descriptionField.setText("");
+                    selectedTransactionId = null;
+                }
+            } else {
+                JOptionPane.showMessageDialog(mainPanel, "Odaberite transakciju za brisanje");
             }
         });
     }

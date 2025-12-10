@@ -80,4 +80,9 @@ public class TransactionManager {
                 new Document("$set", updated)
         );
     }
+
+    public void deleteTransaction(String transactionId) {
+        ObjectId objectId = new ObjectId(transactionId);
+        collection.deleteOne(new Document("_id", objectId));
+    }
 }

@@ -3,13 +3,12 @@ package financeapp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-public class Transaction
-{
+public class Transaction {
+
     private ObjectId id;
     private String type;
     private double amount;
     private String description;
-
 
     public Transaction(ObjectId id, String type, double amount, String description) {
         this.id = id;
@@ -18,24 +17,26 @@ public class Transaction
         this.description = description;
     }
 
-
     public Transaction(String type, double amount, String description) {
         this.type = type;
         this.amount = amount;
         this.description = description;
     }
 
-
+    // Getter za ObjectId
     public ObjectId getId() {
         return id;
     }
 
+    // Getter koji vraća ID kao String
+    public String getIdString() {
+        return id != null ? id.toHexString() : null;
+    }
 
-    public Document toDocument () {
+    public Document toDocument() {
         Document doc = new Document("type", type)
                 .append("amount", amount)
                 .append("description", description);
-
 
         if (id != null) {
             doc.append("_id", id);
@@ -44,14 +45,15 @@ public class Transaction
         return doc;
     }
 
-    public String getType () {
+    public String getType() {
         return type;
     }
-    public double getAmount () {
+
+    public double getAmount() {
         return amount;
     }
-    public String getDescription () {
+
+    public String getDescription() {
         return description;
     }
-
 }
